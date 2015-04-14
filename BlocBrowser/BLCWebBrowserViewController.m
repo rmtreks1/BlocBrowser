@@ -89,7 +89,7 @@
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, width, 120);
     
 }
 
@@ -98,13 +98,13 @@
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
 
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didSelectButtonWithTitle:(NSString *)title {
-    if ([title isEqual:NSLocalizedString(@"Back", @"Back Command")]) {
+    if ([title isEqual:kBLCWebBrowserBackString]) {
         [self.webview goBack];
-    } else if ([title isEqual:NSLocalizedString(@"Forward", @"Forward Command")]) {
+    } else if ([title isEqual:kBLCWebBrowserForwardString]) {
         [self.webview goForward];
-    } else if ([title isEqual:NSLocalizedString(@"Stop", @"Stop Command")]) {
+    } else if ([title isEqual:kBLCWebBrowserStopString]) {
         [self.webview stopLoading];
-    } else if ([title isEqual:NSLocalizedString(@"Refresh", @"Refresh Command")]) {
+    } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
         [self.webview reload];
     }
 }
