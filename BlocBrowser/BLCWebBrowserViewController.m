@@ -125,9 +125,22 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     
+
     NSString *URLString = textField.text;
-    
     NSURL *URL = [NSURL URLWithString:URLString];
+    
+    
+    // check for spaces in URL
+    NSArray *textFieldConverted = [textField.text componentsSeparatedByString:@" "];
+    
+    
+    if (textFieldConverted.count > 1) {
+        NSString *searchParameters = [textFieldConverted componentsJoinedByString:@"+"];
+        NSString *baseGoogleURL = @"http://google.com/search?q=";
+        NSString *googleSearchURL = [NSString stringWithFormat:@"%@%@",baseGoogleURL,searchParameters];
+        
+        URL = [NSURL URLWithString:googleSearchURL];
+    }
     
     if (!URL.scheme) {
         // The user didn't type http: or https:
