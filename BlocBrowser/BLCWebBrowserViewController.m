@@ -115,7 +115,6 @@
 
 - (void) buttonPressed:(id)sender{
     NSString *buttonTitle = [sender titleLabel].text;
-    NSLog(@"on Web Browser button is %@",buttonTitle);
     
     // this implementation feels flakey - if the button titles change this section is broken - maybe should set titles as an array of arrays ??
     if ([buttonTitle  isEqual: @"Back"]) {

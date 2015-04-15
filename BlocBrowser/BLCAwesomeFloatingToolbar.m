@@ -16,6 +16,7 @@
 @property (nonatomic, weak) UIButton *currentButton;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
 
 
@@ -79,6 +80,9 @@
     self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
     [self addGestureRecognizer:self.longPressGesture];
     
+    self.pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(pinchFired:)];
+    [self addGestureRecognizer:self.pinchGesture];
+    
     return self;
 }
 
@@ -127,6 +131,10 @@
     }
 }
 
+
+- (void) pinchFired: (UIPinchGestureRecognizer *)recognizer {
+    NSLog(@"pinch fired");
+}
 
 
 - (void) layoutSubviews {
