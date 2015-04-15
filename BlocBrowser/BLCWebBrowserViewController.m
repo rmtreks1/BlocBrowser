@@ -89,7 +89,7 @@
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
     
-    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, width, 120);
+    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
     
 }
 
@@ -106,6 +106,19 @@
         [self.webview stopLoading];
     } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
         [self.webview reload];
+    }
+}
+
+
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset {
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGPoint newPoint = CGPointMake(startingPoint.x + offset.x, startingPoint.y + offset.y);
+    
+    CGRect potentialNewFrame = CGRectMake(newPoint.x, newPoint.y, CGRectGetWidth(toolbar.frame), CGRectGetHeight(toolbar.frame));
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
     }
 }
 
