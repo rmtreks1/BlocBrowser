@@ -133,7 +133,14 @@
 
 
 - (void) pinchFired: (UIPinchGestureRecognizer *)recognizer {
+   
+    
+    
     NSLog(@"pinch fired");
+    CGFloat pinchScale = recognizer.scale;
+    NSLog(@"pinchScale is %f",pinchScale);
+    [self.delegate floatingToolbar:self didPinch:pinchScale];
+    
 }
 
 
@@ -202,7 +209,9 @@
 # pragma mark - Button Actions
 
 - (void) buttonPressed:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(buttonPressed:)]) {
     [self.delegate buttonPressed:sender];
+    }
 }
 
 

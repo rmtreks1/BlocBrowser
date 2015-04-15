@@ -112,7 +112,6 @@
 }
 
 
-
 - (void) buttonPressed:(id)sender{
     NSString *buttonTitle = [sender titleLabel].text;
     
@@ -126,6 +125,19 @@
     } else if ([buttonTitle isEqual:@"Stop"]) {
         [self.webview stopLoading];
     }
+}
+
+
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didPinch:(CGFloat)scale {
+
+    NSLog(@"the pinch scale in web browser scale is %f",scale); // scale info coming through
+
+
+
+    toolbar.frame = CGRectMake(0, 100, 200, 400);
+    NSLog(@"post toolbar frame");
+    
 }
 
 
