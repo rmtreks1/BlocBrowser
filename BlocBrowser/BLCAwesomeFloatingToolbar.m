@@ -12,11 +12,11 @@
 
 @property (nonatomic, strong) NSArray *currentTitles;
 @property (nonatomic, strong) NSArray *colors;
-@property (nonatomic, strong) NSArray *labels;
-@property (nonatomic, weak) UILabel *currentLabel;
-@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, strong) NSArray *buttons;
+@property (nonatomic, weak) UIButton *currentButton;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
+
 
 
 @end
@@ -39,37 +39,38 @@
                         [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]];
         
         
-        NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
+        NSMutableArray *buttonsArray = [[NSMutableArray alloc] init];
         
         // making the 4 labels
         for (NSString *currentTitle in self.currentTitles) {
-            UILabel *label = [[UILabel alloc] init]; // why are we creating a new object every time, why can't we just change the value?
-            label.userInteractionEnabled = NO;
-            label.alpha = 0.25;
+            UIButton *button = [[UIButton alloc] init];
+            button.alpha = 0.25;
+
             
             NSUInteger currentTitleIndex = [self.currentTitles indexOfObject:currentTitle];
             NSString *titleForThisLabel = [self.currentTitles objectAtIndex:currentTitleIndex]; // why did we need this. Isn't this circular? We already get this value in currentTitle
             UIColor *colorForThisLabel = [self.colors objectAtIndex:currentTitleIndex];
             
-            label.textAlignment = NSTextAlignmentCenter;
-            label.font = [UIFont systemFontOfSize:10];
-            label.text = titleForThisLabel;
-            label.backgroundColor = colorForThisLabel;
-            label.textColor = [UIColor whiteColor];
+            [button setTitle:titleForThisLabel forState:UIControlStateNormal];
             
-            [labelsArray addObject:label];
+            button.titleLabel.textAlignment = NSTextAlignmentCenter;
+            button.titleLabel.font = [UIFont systemFontOfSize:10];
+            button.backgroundColor = colorForThisLabel;
+            button.titleLabel.textColor = [UIColor whiteColor];
+            
+            [buttonsArray addObject:button];
+
             
         }
         
-        self.labels = labelsArray;
+        self.buttons = buttonsArray;
         
-        for (UILabel *thisLabel in self.labels) {
-            [self addSubview: thisLabel];
+        for (UIButton *thisButton in self.buttons) {
+            [thisButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview: thisButton];
         }
     }
     
-    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
-    [self addGestureRecognizer:self.tapGesture];
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
     [self addGestureRecognizer:self.panGesture];
@@ -82,18 +83,6 @@
 }
 
 
-- (void) tapFired:(UITapGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateRecognized) {
-        CGPoint location = [recognizer locationInView:self];
-        UIView *tappedView = [self hitTest:location withEvent:nil];
-        
-        if ([self.labels containsObject:tappedView]) {
-            if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)]) {
-                [self.delegate floatingToolbar:self didSelectButtonWithTitle:((UILabel *)tappedView).text];
-            }
-        }
-    }
-}
 
 
 - (void) panFired:(UIPanGestureRecognizer *)recognizer {
@@ -118,17 +107,17 @@
            
         NSMutableArray *currentColorsArray = [[NSMutableArray alloc] init];
 
-        for (UILabel *thisLabel in self.labels) {
+        for (UIButton *thisButton in self.buttons) {
             UIColor *labelColor;
-            labelColor = thisLabel.backgroundColor;
+            labelColor = thisButton.backgroundColor;
             [currentColorsArray addObject:labelColor];
         }
         
      
-        for (int i = 0; i <= self.labels.count -1; i++) {
-            UILabel *thisLabel = self.labels[i];
+        for (int i = 0; i <= self.buttons.count -1; i++) {
+            UIButton *thisButton = self.buttons[i];
             int j = (i+1) % currentColorsArray.count;
-            thisLabel.backgroundColor = currentColorsArray[j];
+            thisButton.backgroundColor = currentColorsArray[j];
             NSLog(@"%d", i);
         }
 
@@ -145,8 +134,8 @@
     // in the checkpoint notes it says - layoutSubviews will get called any time our view's frame is changed.
     // why is this the case?
     
-    for (UILabel *thisLabel in self.labels) {
-        NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
+    for (UIButton *thisButton in self.buttons) {
+        NSUInteger currentLabelIndex = [self.buttons indexOfObject:thisButton];
         
         CGFloat labelHeight = CGRectGetHeight(self.bounds) / 2;
         CGFloat labelWidth = CGRectGetWidth(self.bounds) / 2;
@@ -171,7 +160,7 @@
             labelX = CGRectGetWidth(self.bounds) / 2;
         }
         
-        thisLabel.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
+        thisButton.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
     }
 }
 
@@ -193,16 +182,20 @@
     NSUInteger index = [self.currentTitles indexOfObject:title];
     
     if (index != NSNotFound) {
-        UILabel *label = [self.labels objectAtIndex:index];
-        label.userInteractionEnabled = enabled;
-        label.alpha = enabled ? 1.0 : 0.25;
+        UIButton *button = [self.buttons objectAtIndex:index];
+        button.userInteractionEnabled = enabled;
+        button.alpha = enabled ? 1.0 : 0.25;
     }
 }
 
 
 
 
+# pragma mark - Button Actions
 
+- (void) buttonPressed:(id)sender {
+    [self.delegate buttonPressed:sender];
+}
 
 
 @end

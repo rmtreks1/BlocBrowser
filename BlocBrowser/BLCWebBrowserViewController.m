@@ -97,17 +97,6 @@
 
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
 
-- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didSelectButtonWithTitle:(NSString *)title {
-    if ([title isEqual:kBLCWebBrowserBackString]) {
-        [self.webview goBack];
-    } else if ([title isEqual:kBLCWebBrowserForwardString]) {
-        [self.webview goForward];
-    } else if ([title isEqual:kBLCWebBrowserStopString]) {
-        [self.webview stopLoading];
-    } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
-        [self.webview reload];
-    }
-}
 
 
 
@@ -122,6 +111,12 @@
     }
 }
 
+
+// testing that I'm sending message from Awesome Toolbar
+- (void) buttonPressed:(id)sender{
+    NSString *buttonTitle = [sender titleLabel].text;
+    NSLog(@"on Web Browser button is %@",buttonTitle);
+}
 
 
 
