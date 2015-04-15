@@ -134,12 +134,17 @@
 
 - (void) pinchFired: (UIPinchGestureRecognizer *)recognizer {
    
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+   
+        NSLog(@"pinch fired");
+        CGFloat pinchScale = recognizer.scale;
+        NSLog(@"pinchScale is %f",pinchScale);
+        
+        if ([self.delegate respondsToSelector:(@selector(floatingToolbar:didPinch:))]) {
+        [self.delegate floatingToolbar:self didPinch:pinchScale];
+        }
+    }
     
-    
-    NSLog(@"pinch fired");
-    CGFloat pinchScale = recognizer.scale;
-    NSLog(@"pinchScale is %f",pinchScale);
-    [self.delegate floatingToolbar:self didPinch:pinchScale];
     
 }
 
