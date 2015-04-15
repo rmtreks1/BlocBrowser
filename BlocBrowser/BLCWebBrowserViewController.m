@@ -112,10 +112,21 @@
 }
 
 
-// testing that I'm sending message from Awesome Toolbar
+
 - (void) buttonPressed:(id)sender{
     NSString *buttonTitle = [sender titleLabel].text;
     NSLog(@"on Web Browser button is %@",buttonTitle);
+    
+    // this implementation feels flakey - if the button titles change this section is broken - maybe should set titles as an array of arrays ??
+    if ([buttonTitle  isEqual: @"Back"]) {
+        [self.webview goBack];
+    } else if ([buttonTitle isEqual:@"Forward"]) {
+        [self.webview goForward];
+    } else if ([buttonTitle isEqual:@"Refresh"]) {
+        [self.webview reload];
+    } else if ([buttonTitle isEqual:@"Stop"]) {
+        [self.webview stopLoading];
+    }
 }
 
 
