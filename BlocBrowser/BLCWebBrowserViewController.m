@@ -27,6 +27,12 @@
 @property (nonatomic, assign) NSUInteger frameCount;
 @property (nonatomic, strong) BLCAwesomeFloatingToolbar *awesomeToolbar;
 
+
+
+@property (assign) BOOL *pinchActivated;
+
+
+
 @end
 
 @implementation BLCWebBrowserViewController
@@ -71,7 +77,7 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
   
-    
+
     
 }
 
@@ -89,7 +95,15 @@
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
     
-    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    if (!self.pinchActivated) {
+        self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    } else if (self.pinchActivated){
+         self.pinchActivated = false;
+    }
+    
+//    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    
+    NSLog(@"view will layout subviews");
     
 }
 
@@ -131,11 +145,19 @@
 
 - (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didPinch:(CGFloat)scale {
 
+    self.pinchActivated = TRUE;
+    
     NSLog(@"the pinch scale in web browser scale is %f",scale); // scale info coming through
-
-
-
-    toolbar.frame = CGRectMake(0, 100, 200, 400);
+    
+    
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGRect potentialNewFrame = CGRectMake(startingPoint.x, startingPoint.y, CGRectGetWidth(toolbar.frame) * scale, CGRectGetHeight(toolbar.frame) * scale);
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
+   
+//    toolbar.frame = CGRectMake(100, 100, 200, 400);
     NSLog(@"post toolbar frame");
     
 }
