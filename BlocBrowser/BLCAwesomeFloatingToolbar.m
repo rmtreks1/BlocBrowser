@@ -16,6 +16,8 @@
 @property (nonatomic, weak) UILabel *currentLabel;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
+
 
 @end
 
@@ -73,6 +75,9 @@
     [self addGestureRecognizer:self.panGesture];
     
     
+    self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
+    [self addGestureRecognizer:self.longPressGesture];
+    
     return self;
 }
 
@@ -106,7 +111,9 @@
     }
 
 
-
+- (void) longPressFired: (UILongPressGestureRecognizer *)recognizer {
+    NSLog(@"long press fired");
+}
 
 
 
