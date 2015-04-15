@@ -29,7 +29,7 @@
 
 
 
-@property (assign) BOOL *pinchActivated;
+@property (assign) BOOL pinchActivated;
 
 
 
