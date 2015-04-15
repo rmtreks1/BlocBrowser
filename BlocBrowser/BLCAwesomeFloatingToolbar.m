@@ -112,7 +112,54 @@
 
 
 - (void) longPressFired: (UILongPressGestureRecognizer *)recognizer {
-    NSLog(@"long press fired");
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+        // code for testing
+        NSLog(@"long press began");
+        NSLog(@"labels has %lu", self.labels.count);
+        
+        NSMutableArray *currentColorsArray = [[NSMutableArray alloc] init];
+
+        for (UILabel *thisLabel in self.labels) {
+            UIColor *labelColor;
+            labelColor = thisLabel.backgroundColor;
+            [currentColorsArray addObject:labelColor];
+        }
+        
+       
+        
+        NSLog(@"current colors array has %lu", (unsigned long)currentColorsArray.count); // just for testing
+
+        UILabel *thisLabel1 = self.labels[0];
+        thisLabel1.backgroundColor = currentColorsArray[1];
+        UILabel *thisLabel2 = self.labels[1];
+        thisLabel2.backgroundColor = currentColorsArray[2];
+        UILabel *thisLabel3 = self.labels[2];
+        thisLabel3.backgroundColor = currentColorsArray[3];
+        UILabel *thisLabel4 = self.labels[3];
+        thisLabel4.backgroundColor = currentColorsArray[0];
+
+
+        
+        
+        
+        
+//        
+//        for (int i = 0; i < self.labels.count -2; i++) {
+//            UILabel *thisLabel = self.labels[i];
+//            UIColor *thisColor = currentColorsArray[i+1];
+//            thisLabel.backgroundColor = thisColor;
+//        }
+//
+//        
+//        for (UILabel *thisLabel in self.labels) {
+//            UILabel *nextLabel = self.labels[2];
+//            thisLabel.backgroundColor = nextLabel.backgroundColor;
+//        }
+
+        
+    }
 }
 
 
