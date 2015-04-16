@@ -27,6 +27,12 @@
 @property (nonatomic, assign) NSUInteger frameCount;
 @property (nonatomic, strong) BLCAwesomeFloatingToolbar *awesomeToolbar;
 
+
+
+@property (assign) BOOL pinchActivated;
+
+
+
 @end
 
 @implementation BLCWebBrowserViewController
@@ -71,7 +77,7 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
   
-    
+
     
 }
 
@@ -89,7 +95,15 @@
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
     
-    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    if (!self.pinchActivated) {
+        self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    } else if (self.pinchActivated){
+         self.pinchActivated = false;
+    }
+    
+//    self.awesomeToolbar.frame = CGRectMake(0, CGRectGetMaxY(self.webview.frame) - 120, 200, 120);
+    
+    NSLog(@"view will layout subviews");
     
 }
 
@@ -97,17 +111,6 @@
 
 #pragma mark - BLCAwesomeFloatingToolbarDelegate
 
-- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didSelectButtonWithTitle:(NSString *)title {
-    if ([title isEqual:kBLCWebBrowserBackString]) {
-        [self.webview goBack];
-    } else if ([title isEqual:kBLCWebBrowserForwardString]) {
-        [self.webview goForward];
-    } else if ([title isEqual:kBLCWebBrowserStopString]) {
-        [self.webview stopLoading];
-    } else if ([title isEqual:kBLCWebBrowserRefreshString]) {
-        [self.webview reload];
-    }
-}
 
 
 
@@ -122,6 +125,42 @@
     }
 }
 
+
+- (void) buttonPressed:(id)sender{
+    NSString *buttonTitle = [sender titleLabel].text;
+    
+    // this implementation feels flakey - if the button titles change this section is broken - maybe should set titles as an array of arrays ??
+    if ([buttonTitle  isEqual: @"Back"]) {
+        [self.webview goBack];
+    } else if ([buttonTitle isEqual:@"Forward"]) {
+        [self.webview goForward];
+    } else if ([buttonTitle isEqual:@"Refresh"]) {
+        [self.webview reload];
+    } else if ([buttonTitle isEqual:@"Stop"]) {
+        [self.webview stopLoading];
+    }
+}
+
+
+
+- (void) floatingToolbar:(BLCAwesomeFloatingToolbar *)toolbar didPinch:(CGFloat)scale {
+
+    self.pinchActivated = TRUE;
+    
+    NSLog(@"the pinch scale in web browser scale is %f",scale); // scale info coming through
+    
+    
+    CGPoint startingPoint = toolbar.frame.origin;
+    CGRect potentialNewFrame = CGRectMake(startingPoint.x, startingPoint.y, CGRectGetWidth(toolbar.frame) * scale, CGRectGetHeight(toolbar.frame) * scale);
+    
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame)) {
+        toolbar.frame = potentialNewFrame;
+    }
+   
+//    toolbar.frame = CGRectMake(100, 100, 200, 400);
+    NSLog(@"post toolbar frame");
+    
+}
 
 
 
